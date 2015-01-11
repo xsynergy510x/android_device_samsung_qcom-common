@@ -38,3 +38,9 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     e2fsck \
     setup_fs
+
+# F2FS
+PRODUCT_PACKAGES += \
+    mkfs.f2fs \
+    fsck.f2fs \
+    fibmap.f2fs
