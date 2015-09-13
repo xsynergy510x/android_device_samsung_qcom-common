@@ -47,7 +47,7 @@ public class SamsungDozeService extends Service {
     private static final String GESTURE_POCKET_KEY = "gesture_pocket";
     private static final String PROXIMITY_WAKE_KEY = "proximity_wake_enable";
 
-    private static final int POCKET_DELTA_NS = 1000 * 1000 * 1000;
+    private static final int POCKET_DELTA_NS = 300 * 1000 * 1000; // 0.3 Sec delta
 
     private Context mContext;
     private SamsungProximitySensor mSensor;
