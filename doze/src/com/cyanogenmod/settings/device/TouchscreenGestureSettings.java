@@ -33,11 +33,13 @@ public class TouchscreenGestureSettings extends PreferenceActivity {
     private static final String KEY_HAND_WAVE = "gesture_hand_wave";
     private static final String KEY_GESTURE_POCKET = "gesture_pocket";
     private static final String KEY_PROXIMITY_WAKE = "proximity_wake_enable";
+    private static final String KEY_VIBRATOR_ACKNOWLEDGE = "vibrator_acknowledge_enable";
 
     private SwitchPreference mAmbientDisplayPreference;
     private SwitchPreference mHandwavePreference;
     private SwitchPreference mPocketPreference;
     private SwitchPreference mProximityWakePreference;
+    private SwitchPreference mVibratorAcknowledgePreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class TouchscreenGestureSettings extends PreferenceActivity {
         mProximityWakePreference =
             (SwitchPreference) findPreference(KEY_PROXIMITY_WAKE);
         mProximityWakePreference.setOnPreferenceChangeListener(mProximityListener);
+        mVibratorAcknowledgePreference =
+            (SwitchPreference) findPreference(KEY_VIBRATOR_ACKNOWLEDGE);
+        mVibratorAcknowledgePreference.setEnabled(dozeEnabled);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -102,6 +107,7 @@ public class TouchscreenGestureSettings extends PreferenceActivity {
             if (ret) {
                 mHandwavePreference.setEnabled(enable);
                 mPocketPreference.setEnabled(enable);
+                mVibratorAcknowledgePreference.setEnabled(enable);
             }
             return ret;
         }

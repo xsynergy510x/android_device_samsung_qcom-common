@@ -37,6 +37,12 @@
             android:defaultValue="false"
             android:title="@string/pocket_gesture_title"
             android:summary="@string/pocket_gesture_summary" />
+
+        <SwitchPreference
+            android:key="vibrator_acknowledge_enable"
+            android:defaultValue="true"
+            android:title="@string/vibrator_acknowledge_title"
+            android:summary="@string/vibrator_acknowledge_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory

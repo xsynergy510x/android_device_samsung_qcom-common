@@ -33,4 +33,7 @@
     <string name="proximity_wake_enable_title">Proximity wake</string>
     <string name="proximity_wake_enable_summary">Wake device on hand wave</string>
 
+    <string name="vibrator_acknowledge_title">Vibrator Acknowledge</string>
+    <string name="vibrator_acknowledge_summary">Vibrates device on Ambient Display pulse</string>
+
 </resources>

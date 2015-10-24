@@ -26,8 +26,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -46,8 +48,11 @@ public class SamsungDozeService extends Service {
     private static final String GESTURE_HAND_WAVE_KEY = "gesture_hand_wave";
     private static final String GESTURE_POCKET_KEY = "gesture_pocket";
     private static final String PROXIMITY_WAKE_KEY = "proximity_wake_enable";
+    private static final String VIBRATOR_ACKNOWLEDGE_KEY = "vibrator_acknowledge_enable";
 
     private static final int POCKET_DELTA_NS = 1000 * 1000 * 1000;
+
+    private static final int VIBRATOR_ACKNOWLEDGE_DURATION = 50;
 
     private Context mContext;
     private SamsungProximitySensor mSensor;
@@ -56,6 +61,7 @@ public class SamsungDozeService extends Service {
     private boolean mHandwaveGestureEnabled = false;
     private boolean mPocketGestureEnabled = false;
     private boolean mProximityWakeEnabled = false;
+    private boolean mVibratorAcknowledgeEnabled = false;
 
     class SamsungProximitySensor implements SensorEventListener {
         private SensorManager mSensorManager;
@@ -145,6 +151,25 @@ public class SamsungDozeService extends Service {
 
     private void launchDozePulse() {
         mContext.sendBroadcast(new Intent(DOZE_INTENT));
+        if (mVibratorAcknowledgeEnabled)
+            launchAcknowledge();
+    }
+
+    private void launchAcknowledge() {
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(
+                Context.AUDIO_SERVICE);
+        Vibrator vibrator = (Vibrator) mContext.getSystemService(
+                Context.VIBRATOR_SERVICE);
+
+        switch (audioManager.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+            case AudioManager.RINGER_MODE_NORMAL:
+            default:
+                vibrator.vibrate(VIBRATOR_ACKNOWLEDGE_DURATION);
+                break;
+        }
     }
 
     private boolean isInteractive() {
@@ -170,6 +195,7 @@ public class SamsungDozeService extends Service {
         mHandwaveGestureEnabled = sharedPreferences.getBoolean(GESTURE_HAND_WAVE_KEY, false);
         mPocketGestureEnabled = sharedPreferences.getBoolean(GESTURE_POCKET_KEY, false);
         mProximityWakeEnabled = sharedPreferences.getBoolean(PROXIMITY_WAKE_KEY, false);
+        mVibratorAcknowledgeEnabled = sharedPreferences.getBoolean(VIBRATOR_ACKNOWLEDGE_KEY, false);
     }
 
     private BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
@@ -193,6 +219,8 @@ public class SamsungDozeService extends Service {
                 mPocketGestureEnabled = sharedPreferences.getBoolean(GESTURE_POCKET_KEY, false);
             } else if (PROXIMITY_WAKE_KEY.equals(key)) {
                 mProximityWakeEnabled = sharedPreferences.getBoolean(PROXIMITY_WAKE_KEY, false);
+            } else if (VIBRATOR_ACKNOWLEDGE_KEY.equals(key)) {
+                mVibratorAcknowledgeEnabled = sharedPreferences.getBoolean(VIBRATOR_ACKNOWLEDGE_KEY, false);
             }
         }
     };
