@@ -52,7 +52,7 @@ public class SamsungDozeService extends Service {
 
     private static final int POCKET_DELTA_NS = 1000 * 1000 * 1000;
 
-    private static final int VIBRATOR_ACKNOWLEDGE_DURATION = 50;
+    private static final int VIBRATOR_ACKNOWLEDGE_DURATION = 30;
 
     private Context mContext;
     private SamsungProximitySensor mSensor;
